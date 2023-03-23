@@ -46,7 +46,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
+    
 }
 
+// MARK: - DEEP LINKS
+extension SceneDelegate {
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let url = URLContexts.first?.url else { return }
+        if let scheme = url.scheme,
+            scheme.localizedCaseInsensitiveCompare("deeplinksswifttutorial") == .orderedSame,
+            let view = url.host {
+            
+            var users: [String: String] = [:]
+            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach {
+                users[$0.name] = $0.value
+            }
+            openView(view, users)
+        }
+    }
+    
+    private func openView(_ view: String, _ users: [String: String]) {
+        print("Open view -> \(view) with user \(users.first!.value)")
+    }
+    
+}
